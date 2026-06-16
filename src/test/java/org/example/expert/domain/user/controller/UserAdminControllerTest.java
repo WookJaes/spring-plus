@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import({SecurityConfig.class, SecurityJwtFilter.class})
 @WebMvcTest(UserAdminController.class)
-class UserAdminControllerSecurityTest {
+class UserAdminControllerTest {
 
     private static final String ADMIN_BEARER_TOKEN = "Bearer admin-token";
     private static final String ADMIN_TOKEN = "admin-token";
@@ -44,9 +44,11 @@ class UserAdminControllerSecurityTest {
 
     @Test
     void 일반_유저는_관리자_API에_접근할_수_없다() throws Exception {
+        // given
         when(jwtUtil.substringToken(USER_BEARER_TOKEN)).thenReturn(USER_TOKEN);
         when(jwtUtil.extractClaims(USER_TOKEN)).thenReturn(createClaims(UserRole.USER));
 
+        // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
                         .header("Authorization", USER_BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -56,20 +58,24 @@ class UserAdminControllerSecurityTest {
 
     @Test
     void 관리자는_관리자_API에_접근할_수_있다() throws Exception {
+        // given
         when(jwtUtil.substringToken(ADMIN_BEARER_TOKEN)).thenReturn(ADMIN_TOKEN);
         when(jwtUtil.extractClaims(ADMIN_TOKEN)).thenReturn(createClaims(UserRole.ADMIN));
 
+        // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
                         .header("Authorization", ADMIN_BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"role\":\"USER\"}"))
                 .andExpect(status().isOk());
 
+        // then
         verify(userAdminService).changeUserRole(eq(1L), any());
     }
 
     @Test
     void Bearer_형식이_아닌_토큰은_요청할_수_없다() throws Exception {
+        // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
                         .header("Authorization", "invalid-token")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,10 +85,12 @@ class UserAdminControllerSecurityTest {
 
     @Test
     void 만료된_토큰은_요청할_수_없다() throws Exception {
+        // given
         when(jwtUtil.substringToken(ADMIN_BEARER_TOKEN)).thenReturn(ADMIN_TOKEN);
         when(jwtUtil.extractClaims(ADMIN_TOKEN))
                 .thenThrow(new ExpiredJwtException(null, null, "만료된 JWT 토큰입니다."));
 
+        // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
                         .header("Authorization", ADMIN_BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
