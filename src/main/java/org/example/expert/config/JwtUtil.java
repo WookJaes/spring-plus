@@ -1,6 +1,7 @@
 package org.example.expert.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -25,6 +26,8 @@ public class JwtUtil {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
+
+    private JwtParser parser;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -32,6 +35,9 @@ public class JwtUtil {
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
+        parser = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build();
     }
 
     public String createToken(Long userId, String email, UserRole userRole, String nickname) {
@@ -57,10 +63,11 @@ public class JwtUtil {
     }
 
     public Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return parser.parseClaimsJws(token).getBody();
+    }
+
+    public Long getUserId(String token) {
+        Claims claims = extractClaims(token);
+        return Long.parseLong(claims.getSubject());
     }
 }
