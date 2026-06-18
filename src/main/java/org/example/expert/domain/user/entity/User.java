@@ -11,10 +11,11 @@ import org.example.expert.domain.user.enums.UserRole;
 @Entity
 @NoArgsConstructor
 @Table(name = "users",
-    indexes = {@Index(name = "idx_users_nickname", columnList = "nickname")})
+        indexes = {@Index(name = "idx_users_nickname", columnList = "nickname")})
 public class User extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String email;

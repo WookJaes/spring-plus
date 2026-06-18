@@ -31,48 +31,48 @@ public class TodoCustomRepositoryImpl implements TodoCustomRepository {
     public Optional<Todo> findByIdWithUser(Long todoId) {
 
         Todo result = jpaFactory
-            .selectFrom(todo)
-            .leftJoin(todo.user, user).fetchJoin()
-            .where(todo.id.eq(todoId))
-            .fetchOne();
+                .selectFrom(todo)
+                .leftJoin(todo.user, user).fetchJoin()
+                .where(todo.id.eq(todoId))
+                .fetchOne();
 
         return Optional.ofNullable(result);
     }
 
     @Override
     public Page<TodoSearchResponse> search(
-        String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt, Pageable pageable) {
+            String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt, Pageable pageable) {
 
         List<TodoSearchResponse> content = jpaFactory
-            .select(Projections.constructor(
-                TodoSearchResponse.class,
-                todo.title,
-                manager.id.countDistinct(),
-                comment.id.countDistinct()
-            ))
-            .from(todo)
-            .leftJoin(todo.managers, manager)
-            .leftJoin(todo.comments, comment)
-            .where(
-                titleContains(keyword),
-                managerNicknameContains(managerNickname),
-                createdAtBetween(startAt, endAt)
-            )
-            .groupBy(todo.id, todo.title)
-            .orderBy(todo.createdAt.desc())
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
+                .select(Projections.constructor(
+                        TodoSearchResponse.class,
+                        todo.title,
+                        manager.id.countDistinct(),
+                        comment.id.countDistinct()
+                ))
+                .from(todo)
+                .leftJoin(todo.managers, manager)
+                .leftJoin(todo.comments, comment)
+                .where(
+                        titleContains(keyword),
+                        managerNicknameContains(managerNickname),
+                        createdAtBetween(startAt, endAt)
+                )
+                .groupBy(todo.id, todo.title)
+                .orderBy(todo.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
         Long totalCount = jpaFactory
-            .select(todo.id.countDistinct())
-            .from(todo)
-            .where(
-                titleContains(keyword),
-                managerNicknameContains(managerNickname),
-                createdAtBetween(startAt, endAt)
-            )
-            .fetchOne();
+                .select(todo.id.countDistinct())
+                .from(todo)
+                .where(
+                        titleContains(keyword),
+                        managerNicknameContains(managerNickname),
+                        createdAtBetween(startAt, endAt)
+                )
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, totalCount != null ? totalCount : 0);
     }
@@ -98,14 +98,14 @@ public class TodoCustomRepositoryImpl implements TodoCustomRepository {
         QUser searchUser = new QUser("searchUser");
 
         return JPAExpressions
-            .selectOne()
-            .from(searchManager)
-            .join(searchManager.user, searchUser)
-            .where(
-                searchManager.todo.eq(todo),
-                searchUser.nickname.containsIgnoreCase(managerNickname)
-            )
-            .exists();
+                .selectOne()
+                .from(searchManager)
+                .join(searchManager.user, searchUser)
+                .where(
+                        searchManager.todo.eq(todo),
+                        searchUser.nickname.containsIgnoreCase(managerNickname)
+                )
+                .exists();
     }
 
     private BooleanExpression titleContains(String keyword) {

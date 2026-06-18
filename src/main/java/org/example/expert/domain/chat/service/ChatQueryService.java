@@ -21,18 +21,18 @@ public class ChatQueryService {
         Pageable pageable = PageRequest.of(0, size);
 
         return repository.findRecentMessages(pageable)
-            .stream()
-            .map(ChatMessageResponse::new)
-            .toList();
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
     }
 
     public List<ChatMessageResponse> getMessagesBefore(Long lastMessageId, int size) {
         Pageable pageable = PageRequest.of(0, size);
 
         return repository.findMessagesBefore(lastMessageId, pageable)
-            .stream()
-            .map(ChatMessageResponse::new)
-            .toList();
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
     }
 
     public List<ChatMessageResponse> getRecentMessages(Long roomId, int size) {
@@ -40,8 +40,8 @@ public class ChatQueryService {
         Pageable pageable = PageRequest.of(0, size);
 
         return repository.findRecentByRoom(roomId, pageable)
-            .stream()
-            .map(ChatMessageResponse::new)
-            .toList();
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
     }
 }

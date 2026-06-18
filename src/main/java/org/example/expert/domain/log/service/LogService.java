@@ -20,8 +20,8 @@ public class LogService {
 
     private String createManagerSaveMessage(Long requesterId, Long todoId, Long managerUserId) {
         return "매니저 등록 요청"
-            + " requesterId=" + requesterId
-            + ", todoId=" + todoId
-            + ", managerUserId=" + managerUserId;
+                + " requesterId=" + requesterId
+                + ", todoId=" + todoId
+                + ", managerUserId=" + managerUserId;
     }
 }

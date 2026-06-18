@@ -22,7 +22,7 @@ public class ChatRoom {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public ChatRoom (String name) {
+    public ChatRoom(String name) {
         this.name = name;
         this.createdAt = LocalDateTime.now();
     }

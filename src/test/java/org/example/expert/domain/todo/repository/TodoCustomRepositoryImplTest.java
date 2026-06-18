@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(properties = {
-    "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-    "spring.sql.init.mode=never",
-    "spring.jpa.hibernate.ddl-auto=create-drop"
+        "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
+        "spring.sql.init.mode=never",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
 })
 @Import(QuerydslConfig.class)
 class TodoCustomRepositoryImplTest {

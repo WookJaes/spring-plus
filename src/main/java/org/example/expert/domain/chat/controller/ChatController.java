@@ -31,10 +31,10 @@ public class ChatController {
         User sender = AuthenticatedUser.fromPrincipal(principal);
 
         ChatRoom room = chatRoomRepository
-            .findById(dto.getRoomId())
-            .orElseThrow(() -> new InvalidRequestException("Chat room not found"));
+                .findById(dto.getRoomId())
+                .orElseThrow(() -> new InvalidRequestException("Chat room not found"));
 
-        ChatMessage message= new ChatMessage(sender, room, dto.getContent());
+        ChatMessage message = new ChatMessage(sender, room, dto.getContent());
 
         chatMessageRepository.save(message);
 
