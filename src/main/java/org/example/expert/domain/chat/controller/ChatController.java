@@ -2,7 +2,7 @@ package org.example.expert.domain.chat.controller;
 
 import java.security.Principal;
 
-import org.example.expert.domain.chat.dto.ChatMessageDTO;
+import org.example.expert.domain.chat.dto.request.ChatMessageRequest;
 import org.example.expert.domain.chat.entity.ChatMessage;
 import org.example.expert.domain.chat.entity.ChatRoom;
 import org.example.expert.domain.chat.repository.ChatMessageRepository;
@@ -26,7 +26,7 @@ public class ChatController {
 
 
     @MessageMapping("/chat.send")
-    public void send(ChatMessageDTO dto, Principal principal) {
+    public void send(ChatMessageRequest dto, Principal principal) {
 
         User sender = AuthenticatedUser.fromPrincipal(principal);
 

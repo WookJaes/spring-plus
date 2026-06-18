@@ -2,7 +2,7 @@ package org.example.expert.domain.chat.controller;
 
 import java.util.List;
 
-import org.example.expert.domain.chat.dto.ChatMessageResponse;
+import org.example.expert.domain.chat.dto.response.ChatMessageResponse;
 import org.example.expert.domain.chat.service.ChatQueryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

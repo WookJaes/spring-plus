@@ -2,7 +2,7 @@ package org.example.expert.domain.chat.service;
 
 import java.util.List;
 
-import org.example.expert.domain.chat.dto.ChatMessageResponse;
+import org.example.expert.domain.chat.dto.response.ChatMessageResponse;
 import org.example.expert.domain.chat.repository.ChatMessageRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

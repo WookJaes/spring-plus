@@ -1,4 +1,4 @@
-package org.example.expert.domain.chat.dto;
+package org.example.expert.domain.chat.dto.response;
 
 import java.time.LocalDateTime;
 
@@ -6,10 +6,8 @@ import org.example.expert.domain.chat.entity.ChatMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class ChatMessageResponse {
     private Long messageId;
