@@ -20,25 +20,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatController {
 
-	private final ChatMessageRepository chatMessageRepository;
-	private final ChatRoomRepository chatRoomRepository;
-	private final SimpMessagingTemplate messagingTemplate;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
-	@MessageMapping("/chat.send")
-	public void send(ChatMessageDTO dto, Principal principal) {
+    @MessageMapping("/chat.send")
+    public void send(ChatMessageDTO dto, Principal principal) {
 
-		User sender = AuthenticatedUser.fromPrincipal(principal);
+        User sender = AuthenticatedUser.fromPrincipal(principal);
 
-		ChatRoom room = chatRoomRepository
-			.findById(dto.getRoomId())
-			.orElseThrow(() -> new InvalidRequestException("Chat room not found"));
+        ChatRoom room = chatRoomRepository
+            .findById(dto.getRoomId())
+            .orElseThrow(() -> new InvalidRequestException("Chat room not found"));
 
-		ChatMessage message= new ChatMessage(sender, room, dto.getContent());
+        ChatMessage message= new ChatMessage(sender, room, dto.getContent());
 
-		chatMessageRepository.save(message);
+        chatMessageRepository.save(message);
 
-		// 채팅방으로 메시지를 발송한다.
-		messagingTemplate.convertAndSend("/sub/chat/" + room.getId(), dto);
-	}
+        // 채팅방으로 메시지를 발송한다.
+        messagingTemplate.convertAndSend("/sub/chat/" + room.getId(), dto);
+    }
 }
