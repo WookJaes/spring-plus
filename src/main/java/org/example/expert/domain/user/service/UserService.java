@@ -31,9 +31,9 @@ public class UserService {
     @Cacheable(value = "usersByNickname", key = "'nickname:' + #nickname")
     public List<UserSearchResponse> searchUsersByNickname(String nickname) {
         return userRepository.findAllByNickname(nickname)
-            .stream()
-            .map(UserSearchResponse::from)
-            .toList();
+                .stream()
+                .map(UserSearchResponse::from)
+                .toList();
     }
 
     @Transactional

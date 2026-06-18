@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name ="log")
+@Table(name = "log")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Log {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String message;
-	private LocalDateTime createdAt;
+    private String message;
+    private LocalDateTime createdAt;
 
-	public Log(String message) {
-		this.message = message;
-		this.createdAt = LocalDateTime.now();
-	}
+    public Log(String message) {
+        this.message = message;
+        this.createdAt = LocalDateTime.now();
+    }
 }

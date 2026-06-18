@@ -14,11 +14,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatRoomController {
 
-	private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-	@PostMapping
-	public ChatRoom create(@RequestParam String name) {
-		ChatRoom room = new ChatRoom(name);
-		return chatRoomRepository.save(room);
-	}
+    @PostMapping
+    public ChatRoom create(@RequestParam String name) {
+        ChatRoom room = new ChatRoom(name);
+        return chatRoomRepository.save(room);
+    }
 }

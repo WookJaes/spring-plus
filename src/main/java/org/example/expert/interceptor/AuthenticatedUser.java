@@ -9,16 +9,16 @@ import lombok.Getter;
 @Getter
 public class AuthenticatedUser implements Principal {
 
-	private final User user;
-	private final String name;
+    private final User user;
+    private final String name;
 
-	public AuthenticatedUser(User user) {
-		this.user = user;
-		this.name = user.getNickname();
-	}
+    public AuthenticatedUser(User user) {
+        this.user = user;
+        this.name = user.getNickname();
+    }
 
-	// Principal에서 User 꺼내기
-	public static User fromPrincipal(Principal principal) {
-		return ((AuthenticatedUser) principal).getUser();
-	}
+    // Principal에서 User 꺼내기
+    public static User fromPrincipal(Principal principal) {
+        return ((AuthenticatedUser) principal).getUser();
+    }
 }

@@ -11,17 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LogService {
 
-	private final LogRepository logRepository;
+    private final LogRepository logRepository;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void saveLog(Long requesterId, Long todoId, Long managerUserId) {
-		logRepository.save(new Log(createManagerSaveMessage(requesterId, todoId, managerUserId)));
-	}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveLog(Long requesterId, Long todoId, Long managerUserId) {
+        logRepository.save(new Log(createManagerSaveMessage(requesterId, todoId, managerUserId)));
+    }
 
-	private String createManagerSaveMessage(Long requesterId, Long todoId, Long managerUserId) {
-		return "매니저 등록 요청"
-			+ " requesterId=" + requesterId
-			+ ", todoId=" + todoId
-			+ ", managerUserId=" + managerUserId;
-	}
+    private String createManagerSaveMessage(Long requesterId, Long todoId, Long managerUserId) {
+        return "매니저 등록 요청"
+                + " requesterId=" + requesterId
+                + ", todoId=" + todoId
+                + ", managerUserId=" + managerUserId;
+    }
 }

@@ -2,7 +2,7 @@ package org.example.expert.domain.chat.service;
 
 import java.util.List;
 
-import org.example.expert.domain.chat.dto.ChatMessageResponse;
+import org.example.expert.domain.chat.dto.response.ChatMessageResponse;
 import org.example.expert.domain.chat.repository.ChatMessageRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,34 +14,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatQueryService {
 
-	private final ChatMessageRepository repository;
+    private final ChatMessageRepository repository;
 
-	public List<ChatMessageResponse> getRecentMessages(int size) {
+    public List<ChatMessageResponse> getRecentMessages(int size) {
 
-		Pageable pageable = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(0, size);
 
-		return repository.findRecentMessages(pageable)
-			.stream()
-			.map(ChatMessageResponse::new)
-			.toList();
-	}
+        return repository.findRecentMessages(pageable)
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
+    }
 
-	public List<ChatMessageResponse> getMessagesBefore(Long lastMessageId, int size) {
-		Pageable pageable = PageRequest.of(0, size);
+    public List<ChatMessageResponse> getMessagesBefore(Long lastMessageId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
 
-		return repository.findMessagesBefore(lastMessageId, pageable)
-			.stream()
-			.map(ChatMessageResponse::new)
-			.toList();
-	}
+        return repository.findMessagesBefore(lastMessageId, pageable)
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
+    }
 
-	public List<ChatMessageResponse> getRecentMessages(Long roomId, int size) {
+    public List<ChatMessageResponse> getRecentMessages(Long roomId, int size) {
 
-		Pageable pageable = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(0, size);
 
-		return repository.findRecentByRoom(roomId, pageable)
-			.stream()
-			.map(ChatMessageResponse::new)
-			.toList();
-	}
+        return repository.findRecentByRoom(roomId, pageable)
+                .stream()
+                .map(ChatMessageResponse::new)
+                .toList();
+    }
 }

@@ -12,5 +12,5 @@ public interface TodoCustomRepository {
     Optional<Todo> findByIdWithUser(Long todoId);
 
     Page<TodoSearchResponse> search(
-        String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt, Pageable pageable);
+            String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt, Pageable pageable);
 }

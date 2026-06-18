@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(properties = {
-    "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-    "spring.sql.init.mode=never",
-    "spring.jpa.hibernate.ddl-auto=create-drop"
+        "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
+        "spring.sql.init.mode=never",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
 })
 @Import(QuerydslConfig.class)
 class TodoCustomRepositoryImplTest {
@@ -190,7 +190,7 @@ class TodoCustomRepositoryImplTest {
 
         entityManager.clear();
 
-        return todoRepository.findById(todo.getId()).orElseThrow();
+        return todoRepository.findById(todo.getId()).orElseThrow(() -> new AssertionError("Saved todo not found"));
     }
 
     private Manager saveManager(User user, Todo todo) {

@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRoom {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-	public ChatRoom (String name) {
-		this.name = name;
-		this.createdAt = LocalDateTime.now();
-	}
+    public ChatRoom(String name) {
+        this.name = name;
+        this.createdAt = LocalDateTime.now();
+    }
 }

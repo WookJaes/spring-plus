@@ -84,8 +84,8 @@ public class TodoService {
         );
     }
 
-    public Page<TodoSearchResponse> search (
-        int page, int size, String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt) {
+    public Page<TodoSearchResponse> search(
+            int page, int size, String keyword, String managerNickname, LocalDateTime startAt, LocalDateTime endAt) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 

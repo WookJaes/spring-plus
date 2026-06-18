@@ -36,8 +36,8 @@ public class JwtUtil {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
         parser = Jwts.parserBuilder()
-            .setSigningKey(key)
-            .build();
+                .setSigningKey(key)
+                .build();
     }
 
     public String createToken(Long userId, String email, UserRole userRole, String nickname) {
