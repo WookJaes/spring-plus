@@ -3,6 +3,7 @@ package org.example.expert.domain.user.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import org.example.expert.domain.user.dto.response.UserSearchResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ public class UserService {
         return new UserResponse(user.getId(), user.getEmail());
     }
 
+    @Cacheable(value = "usersByNickname", key = "'nickname:' + #nickname")
     public List<UserSearchResponse> searchUsersByNickname(String nickname) {
         return userRepository.findAllByNickname(nickname)
             .stream()
