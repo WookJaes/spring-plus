@@ -190,7 +190,7 @@ class TodoCustomRepositoryImplTest {
 
         entityManager.clear();
 
-        return todoRepository.findById(todo.getId()).orElseThrow();
+        return todoRepository.findById(todo.getId()).orElseThrow(() -> new AssertionError("Saved todo not found"));
     }
 
     private Manager saveManager(User user, Todo todo) {
