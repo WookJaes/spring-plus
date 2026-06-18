@@ -1,6 +1,10 @@
 package org.example.expert.domain.user.service;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
+import org.example.expert.domain.user.dto.response.UserSearchResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
@@ -21,6 +25,13 @@ public class UserService {
     public UserResponse getUser(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));
         return new UserResponse(user.getId(), user.getEmail());
+    }
+
+    public List<UserSearchResponse> searchUsersByNickname(String nickname) {
+        return userRepository.findAllByNickname(nickname)
+            .stream()
+            .map(UserSearchResponse::from)
+            .toList();
     }
 
     @Transactional

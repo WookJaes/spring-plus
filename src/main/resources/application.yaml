@@ -3,7 +3,7 @@ spring:
     name: sparta-payment-system
 
   datasource:
-    url: jdbc:mysql://localhost:3306/expert?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/expert?serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
     username: ${NAME}
     password: ${PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,7 +11,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
