@@ -3,13 +3,16 @@ package org.example.expert.domain.user.controller;
 import org.example.expert.config.JwtUtil;
 import org.example.expert.config.SecurityConfig;
 import org.example.expert.config.SecurityJwtFilter;
+import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
+import org.example.expert.domain.user.repository.UserRepository;
 import org.example.expert.domain.user.service.UserAdminService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +22,7 @@ import io.jsonwebtoken.Jwts;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -42,11 +46,19 @@ class UserAdminControllerTest {
     @MockBean
     private JwtUtil jwtUtil;
 
+    @MockBean
+    private UserRepository userRepository;
+
+    @MockBean
+    private JpaMetamodelMappingContext jpaMetamodelMappingContext;
+
     @Test
     void 일반_유저는_관리자_API에_접근할_수_없다() throws Exception {
         // given
+        User user = createUser(UserRole.USER);
         when(jwtUtil.substringToken(USER_BEARER_TOKEN)).thenReturn(USER_TOKEN);
         when(jwtUtil.extractClaims(USER_TOKEN)).thenReturn(createClaims(UserRole.USER));
+        when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user));
 
         // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
@@ -57,10 +69,28 @@ class UserAdminControllerTest {
     }
 
     @Test
-    void 관리자는_관리자_API에_접근할_수_있다() throws Exception {
+    void 토큰이_관리자여도_현재_권한이_일반_유저면_관리자_API에_접근할_수_없다() throws Exception {
         // given
+        User user = createUser(UserRole.USER);
         when(jwtUtil.substringToken(ADMIN_BEARER_TOKEN)).thenReturn(ADMIN_TOKEN);
         when(jwtUtil.extractClaims(ADMIN_TOKEN)).thenReturn(createClaims(UserRole.ADMIN));
+        when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user));
+
+        // when & then
+        mockMvc.perform(patch("/admin/users/{userId}", 1L)
+                        .header("Authorization", ADMIN_BEARER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"role\":\"ADMIN\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void 관리자는_관리자_API에_접근할_수_있다() throws Exception {
+        // given
+        User user = createUser(UserRole.ADMIN);
+        when(jwtUtil.substringToken(ADMIN_BEARER_TOKEN)).thenReturn(ADMIN_TOKEN);
+        when(jwtUtil.extractClaims(ADMIN_TOKEN)).thenReturn(createClaims(UserRole.ADMIN));
+        when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user));
 
         // when & then
         mockMvc.perform(patch("/admin/users/{userId}", 1L)
@@ -104,5 +134,14 @@ class UserAdminControllerTest {
         claims.put("userRole", userRole.name());
         claims.put("nickname", "nickname");
         return claims;
+    }
+
+    private User createUser(UserRole userRole) {
+        User user = mock(User.class);
+        when(user.getId()).thenReturn(1L);
+        when(user.getEmail()).thenReturn("user@email.com");
+        when(user.getUserRole()).thenReturn(userRole);
+        when(user.getNickname()).thenReturn("nickname");
+        return user;
     }
 }

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.example.expert.domain.common.dto.AuthUser;
+import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
+import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityJwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -59,12 +62,19 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
+                long userId = Long.parseLong(claims.getSubject());
+                User user = userRepository.findById(userId).orElse(null);
+                if (user == null) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "존재하지 않는 사용자입니다.");
+                    return;
+                }
+
+                UserRole userRole = user.getUserRole();
                 AuthUser authUser = new AuthUser(
-                        Long.parseLong(claims.getSubject()),
-                        claims.get("email", String.class),
+                        user.getId(),
+                        user.getEmail(),
                         userRole,
-                        claims.get("nickname", String.class)
+                        user.getNickname()
                 );
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -86,9 +96,9 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
                 log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
                 return;
-            } catch (Exception e) {
-                log.error("Internal server error", e);
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (IllegalArgumentException e) {
+                log.error("Invalid JWT token", e);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 JWT 토큰입니다.");
                 return;
             }
 
